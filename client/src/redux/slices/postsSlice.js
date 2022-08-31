@@ -10,11 +10,14 @@ const initialState = {
         items: [],
         status: 'loading'
     },
+    sortType: 1
 };
 
-export const getPosts = createAsyncThunk('posts/getPosts', async () => {
-    const {data} = await instanceApi.get('/posts');
-    return data
+export const getPosts = createAsyncThunk('posts/getPosts', async (type) => {
+    const {data} = await instanceApi.get(`/posts`, {
+        params: {type}
+    });
+    return data;
 });
 
 export const getTags = createAsyncThunk('posts/getTags', async () => {
@@ -30,7 +33,9 @@ const postsSlice = createSlice({
     name: 'posts',
     initialState,
     reducers: {
-
+        sortPosts(state, action) {
+            state.sortType = action.payload
+        }
     },
     extraReducers: {
         // Posts
@@ -62,8 +67,9 @@ const postsSlice = createSlice({
         // Remove post
         [removePost.pending]: (state = initialState, action) => {
             state.posts.items = state.posts.items.filter(item => item._id !== action.meta.arg);
-        }
+        },
     }
 })
 
 export const postsReducer = postsSlice.reducer;
+export const {sortPosts} = postsSlice.actions

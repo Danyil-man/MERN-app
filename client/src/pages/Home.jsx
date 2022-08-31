@@ -7,24 +7,31 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Post } from '../components/Post';
 import { TagsBlock } from '../components/TagsBlock';
 import { CommentsBlock } from '../components/CommentsBlock';
-import { getPosts, getTags } from '../redux/slices/postsSlice';
+import { getPosts, getTags, sortPosts } from '../redux/slices/postsSlice';
 
 export const Home = () => {
   const dispatch = useDispatch();
-  const {posts, tags} = useSelector(state => state.posts);
+  const {posts, tags, sortType} = useSelector(state => state.posts);
   const userData = useSelector(state => state.auth.data);
   const isPostsLoading = posts.status === 'loading';
   const isTagsLoading = tags.status === 'loading';
 
   React.useEffect(() => {
-    dispatch(getPosts());
+    dispatch(getPosts(sortType));
+  }, [sortType])
+  React.useEffect(() => {
     dispatch(getTags())
   }, [])
+
+  const setSortedPosts = (type) => {
+    dispatch(sortPosts(type))
+  }
+
   return (
     <>
-      <Tabs style={{ marginBottom: 15 }} value={0} aria-label="basic tabs example">
-        <Tab label="New" />
-        <Tab label="Popular" />
+      <Tabs style={{ marginBottom: 15 }} value={sortType === 1 ? 0 : 1} aria-label="basic tabs example">
+        <Tab onClick={() => setSortedPosts(1)} label="New" />
+        <Tab onClick={() => setSortedPosts(-1)} label="Popular" />
       </Tabs>
       <Grid container spacing={4}>
         <Grid xs={8} item>

@@ -23,7 +23,7 @@ import {
 const app = express();
 mongoose
   .connect(
-    "mongodb+srv://admin:@cluster0.wlib2we.mongodb.net/?retryWrites=true&w=majority"
+    "mongodb+srv://admin:1234@cluster0.wlib2we.mongodb.net/MERN-blog-website?retryWrites=true&w=majority"
   )
   .then(() => console.log("DB connected"))
   .catch((err) => console.log("DB error", err));

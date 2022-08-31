@@ -2,7 +2,8 @@ import PostModel from "../models/PostModel.js";
 
 export const getPosts = async (req, res) => {
   try {
-    const posts = await PostModel.find().populate("user").exec();
+    const {type} = req.query;
+    const posts = await PostModel.find().sort({viewsCount: type}).populate("user").exec();
 
     res.json(posts);
   } catch (error) {
